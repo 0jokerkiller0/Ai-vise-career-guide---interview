@@ -1,0 +1,14 @@
+STEP 1: Navigate to project folder
+cd "C:\Users\susha\Desktop\collage PROJECT\AI vise\ai-career-coach"
+
+STEP 2: Delete Next.js cache
+Remove-Item -Recurse -Force .next
+
+STEP 3: Generate Prisma Client
+npx prisma generate
+
+STEP 4: Run database migrations
+npx prisma migrate dev
+
+STEP 5: Restart server
+npm run dev
