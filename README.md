@@ -1,88 +1,116 @@
-# AI Career Coach 🧑‍💻
+# AI Vise - Comprehensive AI-Powered Career Guidance & Mock Interview Platform
 
-An intelligent career guidance platform built with **Next.js**, **Neon DB**, **TailwindCSS**, **Prisma**, **Inngest**, and **Shadcn UI**.
+## 🚀 Project Overview
 
----
+AI Vise is a dual-platform solution combining two cutting-edge AI-powered applications designed to revolutionize career development and job preparation:
 
-## 👥 Team SynapSpark
+1. **AI-Powered Mock Interview Platform** - Interactive platform for practicing interview skills
+2. **AI Career Coach** - Comprehensive career guidance system with personalized recommendations
 
-Innovating at the intersection of AI, Web Development, and Career Growth.
+Both platforms leverage advanced AI technologies to provide users with personalized career support and interview preparation tools.
 
-**Members:**
+## 🏗️ Architecture Overview
 
-- Ashish Bind
-- Deep Mhatre
-- Kunal Mali
-- Shreya Patil
-- Sushant Telrandhe
-- Abhishek Mathpati
-- Atharav Shirsat
+### AI-Powered Mock Interview Platform
+- **Technology Stack**: Next.js 14, Tailwind CSS, PostgreSQL (Neon), Drizzle ORM
+- **AI Integration**: Google Gemini API for interview question generation and feedback
+- **Features**:
+  - AI-driven Interview Experience
+  - Personalized Interview Sessions based on job roles and industries
+  - Experience Level Adjusted Questions
+  - Detailed Performance Feedback and Insights
+  - Extensive Question Bank
+  - Performance Grading System
+  - Interview History Tracking
 
----
+### AI Career Coach Platform
+- **Technology Stack**: Next.js 14, Neon DB, TailwindCSS, Prisma ORM, Inngest, Shadcn UI
+- **AI Integration**: Google Gemini API for career advice and skill recommendations
+- **Features**:
+  - AI-powered Q&A Career Chatbot
+  - Personalized Career Advice
+  - Skill-based Recommendations
+  - Interactive Q&A System
+  - Assessment and Progress Tracking
+  - Industry-Specific Guidance
 
-## 🚀 Overview
+## 🛠️ Tech Stack
 
-**AI Career Coach** leverages Generative AI and modern web technologies to provide:
+| Component | Technology |
+|-----------|------------|
+| **Frontend** | Next.js 14, React, Tailwind CSS, Shadcn UI |
+| **Backend** | Node.js, Next.js App Router |
+| **Database** | PostgreSQL (Neon Serverless), Prisma ORM, Drizzle ORM |
+| **Authentication** | Clerk |
+| **AI Engine** | Google Gemini API |
+| **Event Processing** | Inngest |
+| **Styling** | Tailwind CSS, Custom Components |
 
-- Personalized career advice
-- AI-powered skill recommendations
-- Interactive Q&A chatbot
-- Seamless authentication and onboarding
-- Clean, responsive UI/UX
+## 📋 Key Features
 
----
+### Mock Interview Platform Features:
+- ✅ AI-powered interview questions and feedback
+- ✅ Personalized interview experiences
+- ✅ Adaptive questions based on experience level
+- ✅ Detailed performance analysis
+- ✅ Comprehensive question bank
+- ✅ Performance grading system
+- ✅ Interview history tracking
 
-## 📌 Features
+### Career Coach Platform Features:
+- ✅ AI-powered career guidance chatbot
+- ✅ Personalized skill recommendations
+- ✅ Interactive Q&A system
+- ✅ Career assessment tools
+- ✅ Industry-specific guidance
+- ✅ Progress tracking and analytics
+- ✅ Professional development resources
 
-- AI-powered Q&A Career Chatbot
-- Secure authentication (Clerk)
-- Serverless Postgres DB (Neon) with Prisma ORM
-- Event-driven workflows (Inngest)
-- Responsive UI (TailwindCSS & Shadcn UI)
-- Modern Next.js 14 App Router
+## 🏁 Getting Started
 
----
+### Prerequisites
+- Node.js (version 18+)
+- npm or yarn package manager
+- Google Gemini API key
+- Database credentials (Neon/PostgreSQL)
 
-## ⚡ Tech Stack
+### Installation
 
-**Frontend:** [Next.js](https://nextjs.org/), [TailwindCSS](https://tailwindcss.com/), [Shadcn UI](https://ui.shadcn.com/)
-**Backend:** [Node.js](https://nodejs.org/), [Inngest](https://www.inngest.com/)
-**Database:** [Neon](https://neon.tech/) (Serverless Postgres), [Prisma](https://www.prisma.io/)
-**Authentication:** [Clerk](https://clerk.com/)
-**AI:** Google Gemini API
-
----
-
-## 🎬 Demo Video
-
-Showcase your project in action! Upload your demo video to the `public/` folder (e.g., `public/demo_video.mp4`) and add a link or embedded player below:
-
-**Demo:**
-
-[Watch Demo Video](https://drive.google.com/file/d/1oYziUMKt9e9-MWgs8q4ES0woEjHGsB3k/view?usp=drivesdk)
-
-
----
-
-## 🛠️ Getting Started
-
-### 1. Clone the repository
-
+1. **Clone the repository:**
 ```bash
-git clone <your-repo-url>
-cd <your-repo-folder>
+git clone <repository-url>
+cd AI-vise
 ```
 
-### 2. Install dependencies
+2. **Navigate to each platform directory and install dependencies:**
 
+For the Mock Interview Platform:
 ```bash
+cd Ai-mock-Interview
 npm install
 ```
 
-### 3. Configure environment variables
+For the Career Coach Platform:
+```bash
+cd ai-career-coach/Ai-vise-career-guide---interview
+npm install
+```
 
-Create a `.env` file in the root directory and add:
+3. **Configure environment variables:**
 
+For the Mock Interview Platform (`.env.local`):
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+GEMINI_API_KEY=
+DATABASE_URL=
+```
+
+For the Career Coach Platform (`.env`):
 ```env
 DATABASE_URL=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -94,8 +122,90 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
 GEMINI_API_KEY=
 ```
 
-### 4. Run the development server
+4. **Run the development servers:**
 
+For the Mock Interview Platform:
 ```bash
 npm run dev
 ```
+
+For the Career Coach Platform:
+```bash
+npm run dev
+```
+
+5. **Access the applications:**
+- Mock Interview Platform: http://localhost:3000
+- Career Coach Platform: http://localhost:3000 (or separate port if configured)
+
+## 🏗️ Project Structure
+
+```
+AI vise/
+├── Ai-mock-Interview/           # AI-Powered Mock Interview Platform
+│   ├── app/                    # Next.js app router
+│   ├── components/             # Reusable UI components
+│   ├── utils/                  # Utility functions (DB, AI Modal)
+│   ├── public/                 # Static assets
+│   └── ...
+├── ai-career-coach/            # AI Career Coach Platform
+│   └── Ai-vise-career-guide---interview/
+│       ├── app/                # Next.js app router
+│       ├── components/         # Reusable UI components
+│       ├── actions/            # Server actions
+│       ├── data/               # Static data files
+│       ├── lib/                # Library utilities
+│       ├── public/             # Static assets
+│       └── ...
+```
+
+## 💡 Usage
+
+### Mock Interview Platform:
+1. Create an account and complete onboarding
+2. Select interview type (technical, behavioral) and job role
+3. Participate in AI-generated interview questions
+4. Receive immediate feedback and performance analysis
+5. Review past interviews and track progress
+
+### Career Coach Platform:
+1. Sign up and complete profile setup
+2. Interact with the AI career advisor
+3. Take assessments to identify skill gaps
+4. Receive personalized recommendations
+5. Track progress and career development
+
+## 🤝 Contributing
+
+We welcome contributions to improve the AI Vise platform! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👥 Team SynapSpark
+
+Innovating at the intersection of AI, Web Development, and Career Growth.
+
+**Team Members:**
+- Ashish Bind
+- Deep Mhatre
+- Kunal Mali
+- Shreya Patil
+- Sushant Telrandhe
+- Abhishek Mathpati
+- Atharav Shirsat
+
+## 🔗 Contact
+
+For feedback and inquiries, please reach out to the team members.
+
+---
+
+Made with ❤️ by Team SynapSpark
