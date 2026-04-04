@@ -189,23 +189,3 @@ We welcome contributions to improve the AI Vise platform! To contribute:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👥 Team SynapSpark
-
-Innovating at the intersection of AI, Web Development, and Career Growth.
-
-**Team Members:**
-- Ashish Bind
-- Deep Mhatre
-- Kunal Mali
-- Shreya Patil
-- Sushant Telrandhe
-- Abhishek Mathpati
-- Atharav Shirsat
-
-## 🔗 Contact
-
-For feedback and inquiries, please reach out to the team members.
-
----
-
-Made with ❤️ by Team SynapSpark
