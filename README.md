@@ -1,191 +1,310 @@
-# AI Vise - Comprehensive AI-Powered Career Guidance & Mock Interview Platform
+<div align="center">
 
-## 🚀 Project Overview
+<img src="public/ai-vise.png" alt="AI Vise Logo" width="180" />
 
-AI Vise is a dual-platform solution combining two cutting-edge AI-powered applications designed to revolutionize career development and job preparation:
+# AI Vise — AI-Powered Career Guide & Interview Platform
 
-1. **AI-Powered Mock Interview Platform** - Interactive platform for practicing interview skills
-2. **AI Career Coach** - Comprehensive career guidance system with personalized recommendations
+**Personalized career guidance, mock interviews, resume building, and industry insights — all powered by Google Gemini AI.**
 
-Both platforms leverage advanced AI technologies to provide users with personalized career support and interview preparation tools.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://ai-vise-career-guide-interview.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/0jokerkiller0/Ai-vise-career-guide---interview/pulls)
 
-## 🏗️ Architecture Overview
+</div>
 
-### AI-Powered Mock Interview Platform
-- **Technology Stack**: Next.js 14, Tailwind CSS, PostgreSQL (Neon), Drizzle ORM
-- **AI Integration**: Google Gemini API for interview question generation and feedback
-- **Features**:
-  - AI-driven Interview Experience
-  - Personalized Interview Sessions based on job roles and industries
-  - Experience Level Adjusted Questions
-  - Detailed Performance Feedback and Insights
-  - Extensive Question Bank
-  - Performance Grading System
-  - Interview History Tracking
+---
 
-### AI Career Coach Platform
-- **Technology Stack**: Next.js 14, Neon DB, TailwindCSS, Prisma ORM, Inngest, Shadcn UI
-- **AI Integration**: Google Gemini API for career advice and skill recommendations
-- **Features**:
-  - AI-powered Q&A Career Chatbot
-  - Personalized Career Advice
-  - Skill-based Recommendations
-  - Interactive Q&A System
-  - Assessment and Progress Tracking
-  - Industry-Specific Guidance
+## 📌 Table of Contents
+
+- [Overview](#-overview)
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [How It Works](#-how-it-works)
+- [Screenshots](#-screenshots)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🚀 Overview
+
+**AI Vise** is a full-stack AI-powered career development platform that helps professionals and students accelerate their careers. It combines personalized career coaching, AI-generated mock interviews, ATS-optimized resume building, and real-time industry insights — all in one place.
+
+Built with **Next.js 15**, **Google Gemini API**, **Clerk Authentication**, and **Neon PostgreSQL**, the platform delivers a seamless, intelligent experience from onboarding to job offer.
+
+---
+
+## 🌐 Live Demo
+
+🔗 **[https://ai-vise-career-guide-interview.vercel.app](https://ai-vise-career-guide-interview.vercel.app/)**
+
+> Sign up for free to explore all features. No credit card required.
+
+---
+
+## ✨ Features
+
+### 🤖 AI Career Coach
+- Personalized career advice powered by Google Gemini
+- Industry-specific guidance across 15+ sectors
+- Skill gap analysis and learning path recommendations
+- Interactive Q&A career chatbot
+
+### 🎤 Mock Interview Preparation
+- AI-generated role-specific interview questions
+- Experience-level-adjusted question difficulty
+- Instant performance feedback and scoring
+- Interview history tracking and progress analytics
+
+### 📄 Resume & Cover Letter Builder
+- ATS-optimized resume generation
+- AI-assisted cover letter writing
+- PDF export via html2pdf.js
+- LinkedIn profile optimization tips
+
+### 📊 Industry Insights Dashboard
+- Real-time industry trend analysis
+- Salary benchmarking data
+- Market demand forecasting
+- Weekly AI-generated insight reports (powered by Inngest)
+
+### 👤 User Onboarding & Profile
+- Industry and specialization selection (15+ industries)
+- Skills and experience level setup
+- Professional bio builder
+- Personalized dashboard based on profile
+
+---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| **Frontend** | Next.js 14, React, Tailwind CSS, Shadcn UI |
-| **Backend** | Node.js, Next.js App Router |
-| **Database** | PostgreSQL (Neon Serverless), Prisma ORM, Drizzle ORM |
-| **Authentication** | Clerk |
-| **AI Engine** | Google Gemini API |
-| **Event Processing** | Inngest |
-| **Styling** | Tailwind CSS, Custom Components |
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 15.5 (App Router, Turbopack) |
+| **Frontend** | React 19, Tailwind CSS, Shadcn UI, Radix UI |
+| **AI Engine** | Google Gemini API (`@google/generative-ai`) |
+| **Authentication** | Clerk (`@clerk/nextjs` v6) |
+| **Database** | PostgreSQL via Neon Serverless |
+| **ORM** | Prisma v6 |
+| **Background Jobs** | Inngest v3 (event-driven, scheduled tasks) |
+| **Forms** | React Hook Form + Zod validation |
+| **Charts** | Recharts |
+| **PDF Export** | html2pdf.js |
+| **Markdown Editor** | @uiw/react-md-editor |
+| **Deployment** | Vercel |
 
-## 📋 Key Features
+---
 
-### Mock Interview Platform Features:
-- ✅ AI-powered interview questions and feedback
-- ✅ Personalized interview experiences
-- ✅ Adaptive questions based on experience level
-- ✅ Detailed performance analysis
-- ✅ Comprehensive question bank
-- ✅ Performance grading system
-- ✅ Interview history tracking
+## 📁 Project Structure
 
-### Career Coach Platform Features:
-- ✅ AI-powered career guidance chatbot
-- ✅ Personalized skill recommendations
-- ✅ Interactive Q&A system
-- ✅ Career assessment tools
-- ✅ Industry-specific guidance
-- ✅ Progress tracking and analytics
-- ✅ Professional development resources
+```
+Ai-vise-career-guide---interview/
+├── app/                        # Next.js App Router
+│   ├── (auth)/                 # Sign-in / Sign-up pages (Clerk)
+│   ├── (main)/                 # Protected app routes
+│   │   ├── dashboard/          # Main dashboard
+│   │   ├── onboarding/         # User profile setup
+│   │   ├── interview/          # Mock interview feature
+│   │   ├── resume/             # Resume builder
+│   │   └── ai-cover-letter/    # Cover letter generator
+│   ├── api/
+│   │   └── inngest/            # Inngest background job endpoint
+│   └── layout.js               # Root layout with Clerk provider
+│
+├── actions/                    # Next.js Server Actions
+│   ├── user.js                 # Profile update, onboarding
+│   ├── dashboard.js            # Industry insights generation
+│   ├── interview.js            # Interview Q&A logic
+│   └── resume.js               # Resume CRUD operations
+│
+├── components/                 # Reusable UI components
+│   ├── ui/                     # Shadcn UI primitives
+│   └── ...                     # Feature-specific components
+│
+├── data/                       # Static data
+│   └── faqs.js                 # FAQ content
+│
+├── hooks/                      # Custom React hooks
+│
+├── lib/                        # Utilities
+│   ├── prisma.js               # Prisma client singleton
+│   ├── inngest/                # Inngest client + functions
+│   └── utils.js                # Helper functions
+│
+├── prisma/
+│   └── schema.prisma           # Database schema
+│
+├── public/                     # Static assets
+│   └── ai-vise.png             # App logo
+│
+├── .env                        # Environment variables (not committed)
+├── middleware.js               # Clerk auth middleware
+├── next.config.mjs             # Next.js config
+└── package.json
+```
+
+---
 
 ## 🏁 Getting Started
 
 ### Prerequisites
-- Node.js (version 18+)
-- npm or yarn package manager
-- Google Gemini API key
-- Database credentials (Neon/PostgreSQL)
+
+- **Node.js** v18 or higher
+- **npm** or **yarn**
+- A [Neon](https://neon.tech/) PostgreSQL database
+- A [Clerk](https://clerk.com/) account (for authentication)
+- A [Google AI Studio](https://aistudio.google.com/) API key (Gemini)
+- An [Inngest](https://www.inngest.com/) account (for background jobs)
 
 ### Installation
 
-1. **Clone the repository:**
+**1. Clone the repository**
+
 ```bash
-git clone <repository-url>
-cd AI-vise
+git clone https://github.com/0jokerkiller0/Ai-vise-career-guide---interview.git
+cd Ai-vise-career-guide---interview
 ```
 
-2. **Navigate to each platform directory and install dependencies:**
+**2. Install dependencies**
 
-For the Mock Interview Platform:
 ```bash
-cd Ai-mock-Interview
 npm install
 ```
 
-For the Career Coach Platform:
+**3. Set up environment variables**
+
+Create a `.env` file in the root directory (see [Environment Variables](#-environment-variables) section below).
+
+**4. Run database migrations**
+
 ```bash
-cd ai-career-coach/Ai-vise-career-guide---interview
-npm install
+npx prisma migrate dev
+npx prisma generate
 ```
 
-3. **Configure environment variables:**
+**5. Start the development server**
 
-For the Mock Interview Platform (`.env.local`):
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
-GEMINI_API_KEY=
-DATABASE_URL=
+```bash
+npm run dev
 ```
 
-For the Career Coach Platform (`.env`):
+**6. Open in browser**
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory with the following keys:
+
 ```env
-DATABASE_URL=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
+# ─── Database (Neon PostgreSQL) ───────────────────────────────
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+
+# ─── Clerk Authentication ─────────────────────────────────────
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxx
+CLERK_SECRET_KEY=sk_test_xxxxxxxxxxxx
+
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/onboarding
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
-GEMINI_API_KEY=
+
+# ─── Google Gemini AI ─────────────────────────────────────────
+GEMINI_API_KEY=AIzaxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ─── Inngest (Background Jobs) ────────────────────────────────
+INNGEST_EVENT_KEY=xxxxxxxxxxxxxxxx
+INNGEST_SIGNING_KEY=signkey-xxxxxxxxxxxxxxxx
 ```
 
-4. **Run the development servers:**
+> ⚠️ **Never commit your `.env` file.** It is already listed in `.gitignore`.
 
-For the Mock Interview Platform:
-```bash
-npm run dev
-```
+### Where to get each key
 
-For the Career Coach Platform:
-```bash
-npm run dev
-```
+| Key | Source |
+|---|---|
+| `DATABASE_URL` | [Neon Console](https://console.neon.tech/) → Your Project → Connection String |
+| `CLERK_*` | [Clerk Dashboard](https://dashboard.clerk.com/) → API Keys |
+| `GEMINI_API_KEY` | [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| `INNGEST_*` | [Inngest Dashboard](https://app.inngest.com/) → Event Keys |
 
-5. **Access the applications:**
-- Mock Interview Platform: http://localhost:3000
-- Career Coach Platform: http://localhost:3000 (or separate port if configured)
+---
 
-## 🏗️ Project Structure
+## 💡 How It Works
 
 ```
-AI vise/
-├── Ai-mock-Interview/           # AI-Powered Mock Interview Platform
-│   ├── app/                    # Next.js app router
-│   ├── components/             # Reusable UI components
-│   ├── utils/                  # Utility functions (DB, AI Modal)
-│   ├── public/                 # Static assets
-│   └── ...
-├── ai-career-coach/            # AI Career Coach Platform
-│   └── Ai-vise-career-guide---interview/
-│       ├── app/                # Next.js app router
-│       ├── components/         # Reusable UI components
-│       ├── actions/            # Server actions
-│       ├── data/               # Static data files
-│       ├── lib/                # Library utilities
-│       ├── public/             # Static assets
-│       └── ...
+User Signs Up (Clerk)
+        │
+        ▼
+  Onboarding Page
+  (Select Industry, Skills, Experience)
+        │
+        ▼
+   Dashboard
+  ┌──────────────────────────────────────────┐
+  │  Industry Insights  │  Interview Prep    │
+  │  (Inngest weekly    │  (Gemini generates │
+  │   AI generation)    │   role questions)  │
+  ├──────────────────────────────────────────┤
+  │  Resume Builder     │  Cover Letter AI   │
+  │  (Markdown editor + │  (Gemini drafts    │
+  │   PDF export)       │   personalized)    │
+  └──────────────────────────────────────────┘
 ```
 
-## 💡 Usage
+1. **Sign up** — Clerk handles secure authentication
+2. **Onboard** — Select your industry, specialization, experience level, and skills
+3. **Get insights** — Inngest triggers a weekly background job that calls Gemini to generate industry-specific market analysis
+4. **Practice interviews** — Choose a job role; Gemini generates adaptive questions and scores your answers
+5. **Build resume** — Use the markdown editor to craft your resume; export as PDF
 
-### Mock Interview Platform:
-1. Create an account and complete onboarding
-2. Select interview type (technical, behavioral) and job role
-3. Participate in AI-generated interview questions
-4. Receive immediate feedback and performance analysis
-5. Review past interviews and track progress
-
-### Career Coach Platform:
-1. Sign up and complete profile setup
-2. Interact with the AI career advisor
-3. Take assessments to identify skill gaps
-4. Receive personalized recommendations
-5. Track progress and career development
+---
 
 ## 🤝 Contributing
 
-We welcome contributions to improve the AI Vise platform! To contribute:
+Contributions are welcome! Here's how to get started:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```bash
+# 1. Fork the repo on GitHub
+
+# 2. Clone your fork
+git clone https://github.com/YOUR_USERNAME/Ai-vise-career-guide---interview.git
+
+# 3. Create a feature branch
+git checkout -b feature/your-feature-name
+
+# 4. Make your changes and commit
+git commit -m "feat: add your feature description"
+
+# 5. Push to your fork
+git push origin feature/your-feature-name
+
+# 6. Open a Pull Request on GitHub
+```
+
+Please follow the existing code style and keep PRs focused on a single feature or fix.
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
+---
+
+<div align="center">
+
+Built by [Sushant Telrandhe](https://linkedin.com/in/sushant-telrandhe-1917b0236) · Powered by Next.js & Google Gemini
+
+⭐ If you found this useful, please star the repo!
+
+</div>
