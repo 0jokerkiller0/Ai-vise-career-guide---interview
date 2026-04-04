@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <head>
           <link rel="icon" href="/ai-vise.png" sizes="any" />
         </head>
-        <body className={`${inter.className}`}>
+        <body className={`${inter.className}`} suppressHydrationWarning>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

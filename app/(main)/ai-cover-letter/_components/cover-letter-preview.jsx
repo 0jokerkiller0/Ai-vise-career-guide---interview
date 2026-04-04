@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
-import MDEditor from "@uiw/react-md-editor";
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 const CoverLetterPreview = ({ content }) => {
   return (

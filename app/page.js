@@ -105,14 +105,14 @@ export default function LandingPage() {
               <div className="flex items-center justify-center w-20 h-20 bg-[#0E86D4] rounded-full mb-2 mx-auto">
                 <Users className="h-8 w-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-[#000000]">10K+</div>
+              <div className="text-2xl font-bold text-[#000000]">1,000+</div>
               <div className="text-lg text-gray-700 ">Interview Questions</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-20 h-20 bg-[#0E86D4] rounded-full mb-2 mx-auto">
                 <Target className="h-8 w-8 text-white" />
               </div>
-              <div className="text-2xl font-bold  text-[#000000]">95%</div>
+              <div className="text-2xl font-bold  text-[#000000]">90%</div>
               <div className="text-lg text-gray-700 ">Success Rate</div>
             </div>
             <div className="text-center">
@@ -127,7 +127,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="w-full py-12 md:py-24 bg-[#003060]">
+      <section id="how-it-works" className="w-full py-12 md:py-24 bg-[#003060]">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#ffffff] mb-4">

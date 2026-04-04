@@ -65,7 +65,7 @@ const HeroSection = () => {
 
               </Link>
 
-              <Link href="demo_video.mp4">
+              <Link href="#how-it-works">
                 <Button
                   size="lg"
                   variant="outline"
@@ -82,22 +82,22 @@ const HeroSection = () => {
                 <div className="flex items-center justify-center w-12 h-12 bg-[#68BBE3] rounded-full mb-2 mx-auto">
                   <Users className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold text-[#ffffff]">10K+</div>
-                <div className="text-sm text-gray-300">Students Guided</div>
+                <div className="text-2xl font-bold text-[#ffffff]">1,000+</div>
+                <div className="text-sm text-gray-300">Professionals</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center w-12 h-12 bg-[#0E86D4] rounded-full mb-2 mx-auto">
                   <Target className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold  text-[#ffffff]">95%</div>
+                <div className="text-2xl font-bold  text-[#ffffff]">90%</div>
                 <div className="text-sm text-gray-300">Success Rate</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center w-12 h-12 bg-[#055C9D] rounded-full mb-2 mx-auto">
                   <Award className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold text-[#ffffff]">15+</div>
-                <div className="text-sm text-gray-300">Years Experience</div>
+                <div className="text-2xl font-bold text-[#ffffff]">24/7</div>
+                <div className="text-sm text-gray-300">AI Support</div>
               </div>
             </div>
           </div>

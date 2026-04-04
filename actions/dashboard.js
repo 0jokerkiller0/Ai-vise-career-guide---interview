@@ -28,12 +28,55 @@ export const generateAIInsights = async (industry) => {
           Include at least 5 skills and trends.
         `;
 
-  const result = await model.generateContent(prompt);
-  const response = result.response;
-  const text = response.text();
-  const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
+  try {
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
+    
+    // Improved JSON cleaning to handle common AI response quirks
+    const cleanedText = text
+      .replace(/```(?:json)?\n?/g, "") // Remove code blocks
+      .replace(/```\n?/g, "")          // Remove trailing blocks
+      .trim();
 
-  return JSON.parse(cleanedText);
+    const match = cleanedText.match(/\{[\s\S]*\}/);
+    if (!match) {
+      throw new Error("No JSON found in AI response");
+    }
+
+    try {
+      const data = JSON.parse(match[0]);
+      
+      // Normalize data to match Prisma schema types strictly
+      return {
+        salaryRanges: Array.isArray(data.salaryRanges) 
+          ? data.salaryRanges.map(s => ({
+              role: s.role || "Unknown Role",
+              min: parseFloat(s.min) || 0,
+              max: parseFloat(s.max) || 0,
+              median: parseFloat(s.median) || 0,
+              location: s.location || "Remote/Global"
+            }))
+          : [],
+        growthRate: parseFloat(data.growthRate) || (typeof data.growthRate === 'string' ? parseFloat(data.growthRate.replace(/[^0-9.]/g, '')) : 0) || 0,
+        demandLevel: ["High", "Medium", "Low"].includes(data.demandLevel) 
+          ? data.demandLevel 
+          : "Medium",
+        topSkills: Array.isArray(data.topSkills) ? data.topSkills : [],
+        marketOutlook: ["Positive", "Neutral", "Negative"].includes(data.marketOutlook)
+          ? data.marketOutlook
+          : "Neutral",
+        keyTrends: Array.isArray(data.keyTrends) ? data.keyTrends : [],
+        recommendedSkills: Array.isArray(data.recommendedSkills) ? data.recommendedSkills : []
+      };
+    } catch (parseError) {
+      console.error("Parse error:", parseError.message);
+      throw new Error("Failed to parse AI response into valid format");
+    }
+  } catch (error) {
+    console.error("AI Insights generation failed:", error.message);
+    throw new Error("Failed to generate industry insights. Please try again.");
+  }
 };
 
 export async function getIndustryInsights() {
