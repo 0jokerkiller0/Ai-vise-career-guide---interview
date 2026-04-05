@@ -6,6 +6,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingRoot: __dirname,
+  serverActions: {
+    bodySizeLimit: "4mb",
+  },
   images: {
     remotePatterns: [
       {
