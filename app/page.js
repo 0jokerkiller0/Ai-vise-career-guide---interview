@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ArrowRight,
-  Trophy,
   Target,
-  Sparkles, Factory,
-  CheckCircle2, Users, Award,
+  Factory,
+  Users,
+  Award,
 } from "lucide-react";
 import HeroSection from "@/components/hero";
 import {

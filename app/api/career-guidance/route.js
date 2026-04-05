@@ -1,13 +1,10 @@
-
-
-
-import { generateGeminiResponse } from "@/lib/gemini";
+import { getCareerGuidance } from "@/actions/career-guidance";
 import { inngest } from "@/lib/inngest/client";
 import { z } from "zod";
 
 const RequestSchema = z.object({
-    field: z.string().min(1),
-    message: z.string().min(1),
+    field: z.string().trim().min(1),
+    message: z.string().trim().min(1),
     mode: z.enum(["instant", "job"]).optional(), // allow mode selection
 });
 
@@ -35,15 +32,27 @@ export async function POST(req) {
             );
         } else {
             // Call Gemini API directly for instant response
-            const geminiResponse = await generateGeminiResponse({ field, message });
+            const result = await getCareerGuidance({
+                jobField: field,
+                message,
+            });
+
+            if (!result.success) {
+                return new Response(
+                    JSON.stringify({ error: result.error }),
+                    { status: 500, headers: { "Content-Type": "application/json" } }
+                );
+            }
+
             return new Response(
-                JSON.stringify({ status: "success", response: geminiResponse }),
+                JSON.stringify({ status: "success", response: result.data }),
                 { status: 200, headers: { "Content-Type": "application/json" } }
             );
         }
     } catch (err) {
+        console.error("Career guidance route failed:", err);
         return new Response(
-            JSON.stringify({ error: "Internal server error" }),
+            JSON.stringify({ error: err.message || "Internal server error" }),
             { status: 500, headers: { "Content-Type": "application/json" } }
         );
     }

@@ -3,7 +3,6 @@ import { ArrowRight, Target, Users, Award } from "lucide-react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 

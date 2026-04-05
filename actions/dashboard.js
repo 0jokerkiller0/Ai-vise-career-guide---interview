@@ -2,82 +2,51 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { extractGeminiText, getGeminiModel } from "@/lib/gemini";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
-export const generateAIInsights = async (industry) => {
+/**
+ * Internal function to generate insights for an industry using AI.
+ * This matches the IndustryInsight schema in prisma/schema.prisma.
+ */
+export async function generateAIInsights(industry) {
   const prompt = `
-          Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
-          {
-            "salaryRanges": [
-              { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
-            ],
-            "growthRate": number,
-            "demandLevel": "High" | "Medium" | "Low",
-            "topSkills": ["skill1", "skill2"],
-            "marketOutlook": "Positive" | "Neutral" | "Negative",
-            "keyTrends": ["trend1", "trend2"],
-            "recommendedSkills": ["skill1", "skill2"]
-          }
-          
-          IMPORTANT: Return ONLY the JSON. No additional text, notes, or markdown formatting.
-          Include at least 5 common roles for salary ranges.
-          Growth rate should be a percentage.
-          Include at least 5 skills and trends.
-        `;
+    Provide current market insights for the "${industry}" industry.
+    Include:
+    - Average salary ranges for common roles (provide min, max, median, role).
+    - Year-over-year growth rate (as a percentage number only).
+    - Market demand level ("High", "Medium", or "Low").
+    - Top 5 in-demand skills in this industry.
+    - Market outlook summary ("Positive", "Neutral", or "Negative").
+    - 3-5 key industry trends.
+    - 3-5 recommended skills for someone entering this industry.
+    
+    Return the response in this JSON format ONLY:
+    {
+      "salaryRanges": [
+        { "role": "string", "min": number, "max": number, "median": number }
+      ],
+      "growthRate": number,
+      "demandLevel": "string",
+      "topSkills": ["string"],
+      "marketOutlook": "string",
+      "keyTrends": ["string"],
+      "recommendedSkills": ["string"]
+    }
+  `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = response.text();
+    const result = await getGeminiModel().generateContent(prompt);
+    const responseText = extractGeminiText(result);
     
-    // Improved JSON cleaning to handle common AI response quirks
-    const cleanedText = text
-      .replace(/```(?:json)?\n?/g, "") // Remove code blocks
-      .replace(/```\n?/g, "")          // Remove trailing blocks
-      .trim();
-
-    const match = cleanedText.match(/\{[\s\S]*\}/);
-    if (!match) {
-      throw new Error("No JSON found in AI response");
-    }
-
-    try {
-      const data = JSON.parse(match[0]);
-      
-      // Normalize data to match Prisma schema types strictly
-      return {
-        salaryRanges: Array.isArray(data.salaryRanges) 
-          ? data.salaryRanges.map(s => ({
-              role: s.role || "Unknown Role",
-              min: parseFloat(s.min) || 0,
-              max: parseFloat(s.max) || 0,
-              median: parseFloat(s.median) || 0,
-              location: s.location || "Remote/Global"
-            }))
-          : [],
-        growthRate: parseFloat(data.growthRate) || (typeof data.growthRate === 'string' ? parseFloat(data.growthRate.replace(/[^0-9.]/g, '')) : 0) || 0,
-        demandLevel: ["High", "Medium", "Low"].includes(data.demandLevel) 
-          ? data.demandLevel 
-          : "Medium",
-        topSkills: Array.isArray(data.topSkills) ? data.topSkills : [],
-        marketOutlook: ["Positive", "Neutral", "Negative"].includes(data.marketOutlook)
-          ? data.marketOutlook
-          : "Neutral",
-        keyTrends: Array.isArray(data.keyTrends) ? data.keyTrends : [],
-        recommendedSkills: Array.isArray(data.recommendedSkills) ? data.recommendedSkills : []
-      };
-    } catch (parseError) {
-      console.error("Parse error:", parseError.message);
-      throw new Error("Failed to parse AI response into valid format");
-    }
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("Invalid AI response format");
+    
+    return JSON.parse(jsonMatch[0]);
   } catch (error) {
-    console.error("AI Insights generation failed:", error.message);
-    throw new Error("Failed to generate industry insights. Please try again.");
+    console.error("Gemini Insight Generation Error:", error);
+    throw error;
   }
-};
+}
 
 export async function getIndustryInsights() {
   const { userId } = await auth();
@@ -85,27 +54,44 @@ export async function getIndustryInsights() {
 
   const user = await db.user.findUnique({
     where: { clerkUserId: userId },
-    include: {
-      industryInsight: true,
-    },
+    select: { industry: true },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user || !user.industry) {
+    throw new Error("Industry not set. Please complete onboarding.");
+  }
 
-  // If no insights exist, generate them
-  if (!user.industryInsight) {
+  // 1. Check if we have recent insights in the database
+  const existingInsight = await db.industryInsight.findUnique({
+    where: { industry: user.industry },
+  });
+
+  // If insight exists and nextUpdate is in the future, return it
+  if (existingInsight && new Date(existingInsight.nextUpdate) > new Date()) {
+    return existingInsight;
+  }
+
+  // 2. Otherwise generate new insights
+  try {
     const insights = await generateAIInsights(user.industry);
 
-    const industryInsight = await db.industryInsight.create({
-      data: {
+    const updatedInsight = await db.industryInsight.upsert({
+      where: { industry: user.industry },
+      update: {
+        ...insights,
+        nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Update every 7 days
+      },
+      create: {
         industry: user.industry,
         ...insights,
         nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
 
-    return industryInsight;
+    return updatedInsight;
+  } catch (error) {
+    console.error("Error in getIndustryInsights:", error);
+    if (existingInsight) return existingInsight;
+    throw new Error("Failed to fetch industry insights.");
   }
-
-  return user.industryInsight;
 }

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 
 
@@ -39,16 +38,23 @@ export default function CareerGuidancePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ field, message: input }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to generate career guidance");
+      }
+
       const data = await res.json();
       let aiText = data.response;
       if (!aiText || typeof aiText !== "string" || aiText.trim().length === 0) {
         aiText = "Sorry, I could not generate a response at this time.";
       }
       setMessages((msgs) => [...msgs, { sender: "ai", text: aiText }]);
-    } catch (err) {
+    } catch (error) {
+      console.error("Frontend Error:", error);
       setMessages((msgs) => [
         ...msgs,
-        { sender: "ai", text: "Error contacting AI service. Please try again later." },
+        { sender: "ai", text: `Error: ${error.message || "Something went wrong. Please try again later."}` },
       ]);
     } finally {
       setLoading(false);
@@ -141,7 +147,6 @@ export default function CareerGuidancePage() {
               disabled={!(fieldInput.trim() || selectedField) || loading}
             />
             <Button
-              onClick={handleSend}
               disabled={!input.trim() || !(fieldInput.trim() || selectedField) || loading}
               type="submit"
               className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-2 font-semibold shadow disabled:opacity-50 transition-all"

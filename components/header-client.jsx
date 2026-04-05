@@ -13,6 +13,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   PenBox,
+  Settings,
   StarsIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -86,6 +87,12 @@ export default function HeaderClient() {
                   <Link href="/career-guidance" className="flex items-center gap-2">
                     <StarsIcon className="h-4 w-4" />
                     Career Guidance
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/settings" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Profile Settings
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>

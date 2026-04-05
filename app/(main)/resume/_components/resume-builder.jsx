@@ -19,6 +19,15 @@ import useFetch from "@/hooks/use-fetch";
 import { useUser } from "@clerk/nextjs";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { resumeSchema } from "@/app/lib/schema";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -63,10 +72,36 @@ export default function ResumeBuilder({ initialContent }) {
   // Update preview content when form values change
   useEffect(() => {
     if (activeTab === "edit") {
-      const newContent = getCombinedContent();
+      const { summary, skills, experience, education, projects, contactInfo = {} } = formValues;
+      const contactParts = [];
+
+      if (contactInfo.email) contactParts.push(`ðŸ“§ ${contactInfo.email}`);
+      if (contactInfo.mobile) contactParts.push(`ðŸ“± ${contactInfo.mobile}`);
+      if (contactInfo.linkedin) {
+        contactParts.push(`ðŸ’¼ [LinkedIn](${contactInfo.linkedin})`);
+      }
+      if (contactInfo.twitter) {
+        contactParts.push(`ðŸ¦ [Twitter](${contactInfo.twitter})`);
+      }
+
+      const contactMarkdown = contactParts.length > 0
+        ? `## <div align="center">${user?.fullName ?? ""}</div>\n\n<div align="center">\n\n${contactParts.join(" | ")}\n\n</div>`
+        : "";
+
+      const newContent = [
+        contactMarkdown,
+        summary && `## Professional Summary\n\n${summary}`,
+        skills && `## Skills\n\n${skills}`,
+        entriesToMarkdown(experience, "Work Experience"),
+        entriesToMarkdown(education, "Education"),
+        entriesToMarkdown(projects, "Projects"),
+      ]
+        .filter(Boolean)
+        .join("\n\n");
+
       setPreviewContent(newContent ? newContent : initialContent);
     }
-  }, [formValues, activeTab]);
+  }, [activeTab, formValues, initialContent, user?.fullName]);
 
   // Handle save result
   useEffect(() => {
@@ -130,15 +165,13 @@ export default function ResumeBuilder({ initialContent }) {
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     try {
       const formattedContent = previewContent
-        .replace(/\n/g, "\n") // Normalize newlines
-        .replace(/\n\s*\n/g, "\n\n") // Normalize multiple newlines to double newlines
+        .replace(/\n\s*\n/g, "\n\n")
         .trim();
 
-      console.log(previewContent, formattedContent);
-      await saveResumeFn(previewContent);
+      await saveResumeFn(formattedContent);
     } catch (error) {
       console.error("Save error:", error);
     }

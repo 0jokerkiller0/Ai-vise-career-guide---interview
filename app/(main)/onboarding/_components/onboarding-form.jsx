@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +37,6 @@ const OnboardingForm = ({ industries }) => {
   const {
     loading: updateLoading,
     fn: updateUserFn,
-    data: updateResult,
   } = useFetch(updateUser);
 
   const {
@@ -56,26 +55,17 @@ const OnboardingForm = ({ industries }) => {
         .toLowerCase()
         .replace(/ /g, "-")}`;
 
-      // Ensure skills is a string (comma-separated)
-      const skillsString = typeof values.skills === 'string' 
-        ? values.skills 
-        : Array.isArray(values.skills) 
-          ? values.skills.join(', ') 
-          : '';
-
       const result = await updateUserFn({
         industry: formattedIndustry,
         experience: typeof values.experience === 'number' ? values.experience : parseInt(values.experience) || 0,
         bio: values.bio || '',
-        skills: skillsString,
+        skills: Array.isArray(values.skills) ? values.skills : [],
       });
 
       if (result?.success) {
         toast.success("Profile completed successfully!");
         router.refresh();
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 500);
+        router.push("/dashboard");
       } else {
         toast.error("Failed to update profile. Please try again.");
       }
@@ -84,8 +74,6 @@ const OnboardingForm = ({ industries }) => {
       toast.error(error.message || "Failed to update profile. Please try again.");
     }
   };
-
-  // Removed useEffect - handling redirect in onSubmit instead
 
   const watchIndustry = watch("industry");
 

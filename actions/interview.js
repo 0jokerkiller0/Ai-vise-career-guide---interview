@@ -2,10 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+import { extractGeminiText, extractJsonObject, getGeminiModel } from "@/lib/gemini";
 
 export async function generateQuiz() {
   const { userId } = await auth();
@@ -20,6 +17,7 @@ export async function generateQuiz() {
   });
 
   if (!user) throw new Error("User not found");
+  if (!user.industry) throw new Error("Complete onboarding before starting a quiz");
 
   const prompt = `
     Generate 10 technical interview questions for a ${
@@ -44,16 +42,25 @@ export async function generateQuiz() {
   `;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = response.text();
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
-    const quiz = JSON.parse(cleanedText);
+    const result = await getGeminiModel().generateContent(prompt);
+    const text = extractGeminiText(result);
+    
+    try {
+      const quiz = JSON.parse(extractJsonObject(text));
 
-    return quiz.questions;
+      if (!Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+        throw new Error("Gemini did not return any questions in the expected format");
+      }
+
+      return quiz.questions;
+    } catch (parseError) {
+      console.error("JSON Parsing Error:", parseError);
+      console.error("Raw text from Gemini:", text);
+      throw new Error("AI returned an invalid quiz format. Please try again.");
+    }
   } catch (error) {
     console.error("Error generating quiz:", error);
-    throw new Error("Failed to generate quiz questions");
+    throw new Error(error.message || "Failed to generate quiz questions");
   }
 }
 
@@ -100,10 +107,9 @@ export async function saveQuizResult(questions, answers, score) {
     `;
 
     try {
-      const tipResult = await model.generateContent(improvementPrompt);
+      const tipResult = await getGeminiModel().generateContent(improvementPrompt);
 
-      improvementTip = tipResult.response.text().trim();
-      console.log(improvementTip);
+      improvementTip = extractGeminiText(tipResult);
     } catch (error) {
       console.error("Error generating improvement tip:", error);
       // Continue without improvement tip if generation fails
@@ -152,5 +158,69 @@ export async function getAssessments() {
   } catch (error) {
     console.error("Error fetching assessments:", error);
     throw new Error("Failed to fetch assessments");
+  }
+}
+
+export async function generateInterviewFeedback(role, questions, answers) {
+  const prompt = `
+    Analyze this technical interview for a ${role} position.
+    
+    Questions and User Answers:
+    ${questions.map((q, i) => `Q: ${q.question}\nUser Answer: ${answers[i]}\nCorrect Answer: ${q.correctAnswer}`).join("\n\n")}
+    
+    Provide a detailed feedback report in plain text (no markdown if possible) that includes:
+    1. Overall performance summary.
+    2. Strengths identified.
+    3. Specific areas for improvement.
+    4. Recommended study topics or next steps.
+    
+    Keep it professional, encouraging, and actionable.
+  `;
+
+  try {
+    const result = await getGeminiModel().generateContent(prompt);
+    return extractGeminiText(result);
+  } catch (error) {
+    console.error("Error generating interview feedback:", error);
+    return "Feedback generation failed, but your results have been saved.";
+  }
+}
+
+export async function saveInterviewSession({ role, questions, answers }) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  // Calculate score
+  const correctCount = questions.reduce((acc, q, index) => {
+    return q.correctAnswer === answers[index] ? acc + 1 : acc;
+  }, 0);
+  
+  const score = (correctCount / questions.length) * 100;
+
+  // Generate AI feedback
+  const feedback = await generateInterviewFeedback(role, questions, answers);
+
+  try {
+    const session = await db.interviewSession.create({
+      data: {
+        userId: user.id,
+        role,
+        questions,
+        answers,
+        feedback,
+        score,
+      },
+    });
+
+    return { success: true, data: session };
+  } catch (error) {
+    console.error("Error saving interview session:", error);
+    throw new Error("Failed to save interview session");
   }
 }
